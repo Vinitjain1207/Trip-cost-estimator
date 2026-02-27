@@ -16,6 +16,13 @@ const mockFlights = [
     departure: "11:30 AM",
     stops: "1 Stop",
   },
+  {
+    airline: "Indigo",
+    price: 50,
+    duration: "1h 30m",
+    departure: "08:00 AM",
+    stops: "Non-stop",
+  }
 ]
 
 export default function FlightResults({ sortBy }) {

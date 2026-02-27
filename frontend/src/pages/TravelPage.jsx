@@ -1,5 +1,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import FlightSearch from "./FlightSearch"
+import BusBookingPage from "./BusBookingPage"
+import TrainBookingPage from "./TrainBookingPage"
 
 export default function TravelPage() {
   return (
@@ -18,13 +20,13 @@ export default function TravelPage() {
 
         <TabsContent value="train">
           <div className="text-muted-foreground">
-            Train booking coming soon...
+          <TrainBookingPage />
           </div>
         </TabsContent>
 
         <TabsContent value="bus">
           <div className="text-muted-foreground">
-            Bus booking coming soon...
+            <BusBookingPage />
           </div>
         </TabsContent>
 

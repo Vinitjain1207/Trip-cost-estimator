@@ -9,6 +9,9 @@ const airports = [
   { code: "LHR", name: "London Heathrow (LHR)" },
   { code: "DXB", name: "Dubai (DXB)" },
   { code: "CDG", name: "Paris (CDG)" },
+  { code: "AMD", name: "Ahmedabad" },
+  { code: "BOM", name: "Mumbai" },
+
 ]
 
 export default function AirportCombobox({ label, value, onChange }) {

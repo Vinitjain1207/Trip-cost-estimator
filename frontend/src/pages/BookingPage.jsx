@@ -6,6 +6,9 @@ import { Login } from "@/App";
 import { Signup } from "@/App";
 import TravelPage from "./TravelPage";
 import HotelsPage from "./HotelsPage";
+import RestaurantPage from "./RestaurantPage";
+import Activities from "./Activities";
+import EssentialsPage from "./Essentials";
 import {
   User,
   Menu,
@@ -63,7 +66,7 @@ export function TabsDemo() {
         <TabsTrigger value="hotel">Hotels</TabsTrigger>
         <TabsTrigger value="restaurants">Restaurants</TabsTrigger>
         <TabsTrigger value="activities">Activities</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
+        <TabsTrigger value="essentials">Essentials</TabsTrigger>
         <TabsTrigger value="services">Services</TabsTrigger>
         <TabsTrigger value="services">Services</TabsTrigger>
         <TabsTrigger value="services">Services</TabsTrigger>
@@ -88,16 +91,17 @@ export function TabsDemo() {
       </TabsContent>
       <TabsContent value="restaurants">
         <Card>
-          <CardHeader>
-            <CardTitle>Restaurant</CardTitle>
-            <CardDescription>
-              Manage your account preferences and options. Customize your
-              experience to fit your needs.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            Configure notifications, security, and themes.
-          </CardContent>
+          <RestaurantPage />
+        </Card>
+      </TabsContent>
+      <TabsContent value="activities">
+        <Card>
+          <Activities />
+        </Card>
+      </TabsContent>
+      <TabsContent value="essentials">
+        <Card>
+          <EssentialsPage />
         </Card>
       </TabsContent>
     </Tabs>
