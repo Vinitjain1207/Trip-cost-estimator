@@ -1,27 +1,34 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Slider } from "@/components/ui/slider"
-import AirportCombobox from "./AirportCombobox"
-import FlightResults from "./FlightResults"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Counter } from "./BookingPage";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import AirportCombobox from "./AirportCombobox";
+import FlightResults from "./FlightResults";
 
 export default function FlightSearch() {
-  const [tripType, setTripType] = useState("round")
-  const [from, setFrom] = useState("")
-  const [to, setTo] = useState("")
-  const [maxPrice, setMaxPrice] = useState([1000])
-  const [nonStop, setNonStop] = useState(false)
-  const [sortBy, setSortBy] = useState("price")
-  const [showResults, setShowResults] = useState(false)
+  const [tripType, setTripType] = useState("round");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [maxPrice, setMaxPrice] = useState([1000]);
+  const [nonStop, setNonStop] = useState(false);
+  const [sortBy, setSortBy] = useState("price");
+  const [showResults, setShowResults] = useState(false);
+  const [quantity, setQuantity] = useState(0);
 
   const handleSearch = () => {
-    setShowResults(true)
-  }
+    setShowResults(true);
+  };
 
   return (
     <div className="space-y-6">
-
       {/* Multi-city toggle */}
       <Select value={tripType} onValueChange={setTripType}>
         <SelectTrigger>
@@ -40,6 +47,17 @@ export default function FlightSearch() {
         <AirportCombobox label="To" value={to} onChange={setTo} />
       </div>
 
+      <div className="grid grid-cols-2 gap-4">
+        <Counter
+          label="Quantity"
+          value={quantity}
+          setValue={(value) => {
+            setQuantity(value);
+          }}
+          min={1}
+        />
+      </div>
+
       {/* Filters */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
@@ -49,7 +67,7 @@ export default function FlightSearch() {
 
         <div>
           <label className="text-sm font-medium">
-            Max Price (${maxPrice[0]})
+            Max Price (₹{maxPrice[0]})
           </label>
           <Slider
             defaultValue={[1000]}
@@ -75,10 +93,7 @@ export default function FlightSearch() {
         Search Flights
       </Button>
 
-      {showResults && (
-        <FlightResults sortBy={sortBy} />
-      )}
-
+      {showResults && <FlightResults quantity={quantity} sortBy={sortBy} />}
     </div>
-  )
+  );
 }

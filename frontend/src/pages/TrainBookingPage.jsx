@@ -1,14 +1,12 @@
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useContext, useState } from "react";
+import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
+import { BookDispatchContext } from "./BookingContext";
+import { BookContext } from "./BookingContext";
 import {
   Dialog,
   DialogContent,
@@ -26,28 +24,28 @@ import {
 
 const trainsData = [
   {
-    id: 1,
-    name: "Rajdhani Express",
-    class: "2A",
-    departure: "06:00 AM",
-    arrival: "2:00 PM",
-    price: 1400,
+    TrainName: "Rajdhani Express",
+    Trainclass: "2A",
+    Cost: 1400,
+    Coach: "B1",
+    Depart: "06:00 AM",
+    Arrival: "2:00 PM",
   },
   {
-    id: 2,
-    name: "Shatabdi Express",
-    class: "1A",
-    departure: "09:00 AM",
-    arrival: "5:00 PM",
-    price: 2000,
+    TrainName: "Shatabdi Express",
+    Trainclass: "1A",
+    Cost: 2000,
+    Coach: "M1",
+    Depart: "09:00 AM",
+    Arrival: "5:00 PM",
   },
   {
-    id: 3,
-    name: "Duronto Express",
-    class: "3A",
-    departure: "10:00 PM",
-    arrival: "6:00 AM",
-    price: 1100,
+    TrainName: "Duronto Express",
+    Trainclass: "3A",
+    Cost: 1100,
+    Coach: "B2",
+    Depart: "10:00 PM",
+    Arrival: "6:00 AM",
   },
 ];
 
@@ -65,6 +63,9 @@ const coachLayout = [
 ];
 
 export default function TrainBookingUnified() {
+  const dispatch = useContext(BookDispatchContext);
+  const Books = useContext(BookContext);
+  const [date, setDate] = useState(Books[5].date);
   const [selectedClass, setSelectedClass] = useState([]);
   const [priceRange, setPriceRange] = useState([500, 3000]);
   const [selectedTrain, setSelectedTrain] = useState(null);
@@ -74,27 +75,30 @@ export default function TrainBookingUnified() {
 
   const filteredTrains = trainsData.filter((train) => {
     const classMatch =
-      selectedClass.length === 0 || selectedClass.includes(train.class);
+      selectedClass.length === 0 || selectedClass.includes(train.Trainclass);
     const priceMatch =
-      train.price >= priceRange[0] && train.price <= priceRange[1];
+      train.Cost >= priceRange[0] && train.Cost <= priceRange[1];
     return classMatch && priceMatch;
   });
 
   const toggleSeat = (seat) => {
-    setSelectedSeats((prev) =>
-      prev.includes(seat)
-        ? prev.filter((s) => s !== seat)
-        : [...prev, seat]
+    setSelectedSeats((p) =>
+      p.includes(seat) ? p.filter((s) => s !== seat) : [...p, seat],
     );
+    const newseats = selectedSeats.includes(seat)
+      ? selectedSeats.filter((s) => s !== seat)
+      : [...selectedSeats, seat];
+    dispatch({
+      type: "Books5changed",
+      field: "Berth",
+      new: newseats,
+    });
   };
 
-  const totalFare = selectedSeats.length * (selectedTrain?.price || 0);
+  const totalFare = selectedSeats.length * (selectedTrain?.Cost || 0);
 
   const addPassenger = () => {
-    setPassengers([
-      ...passengers,
-      { name: "", age: "", gender: "" },
-    ]);
+    setPassengers([...passengers, { name: "", age: "", gender: "" }]);
   };
 
   const updatePassenger = (index, field, value) => {
@@ -105,7 +109,6 @@ export default function TrainBookingUnified() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       {/* Search Section */}
       <div className="max-w-7xl mx-auto p-6">
         <Card className="mb-6">
@@ -113,9 +116,20 @@ export default function TrainBookingUnified() {
             <CardTitle>Search Trains</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input placeholder="From Station" />
-            <Input placeholder="To Station" />
-            <Input type="date" />
+            <Input defaultValue="Bombay" placeholder="From Station" />
+            <Input defaultValue="Ahmedabad" placeholder="To Station" />
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+                dispatch({
+                  type: "Books5changed",
+                  new: e.target.value,
+                  field: "date",
+                });
+              }}
+            />
           </CardContent>
         </Card>
 
@@ -134,11 +148,10 @@ export default function TrainBookingUnified() {
                     <Checkbox
                       checked={selectedClass.includes(cls)}
                       onCheckedChange={(checked) => {
-                        if (checked)
-                          setSelectedClass([...selectedClass, cls]);
+                        if (checked) setSelectedClass([...selectedClass, cls]);
                         else
                           setSelectedClass(
-                            selectedClass.filter((c) => c !== cls)
+                            selectedClass.filter((c) => c !== cls),
                           );
                       }}
                     />
@@ -167,25 +180,25 @@ export default function TrainBookingUnified() {
           {/* Train Results */}
           <div className="md:col-span-3 space-y-4">
             {filteredTrains.map((train) => (
-              <Card key={train.id} className="hover:shadow-lg transition">
+              <Card key={train.TrainName} className="hover:shadow-lg transition">
                 <CardContent className="p-5 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                   <div>
-                    <h3 className="font-bold text-lg">{train.name}</h3>
-                    <Badge variant="secondary">{train.class}</Badge>
+                    <h3 className="font-bold text-lg">{train.TrainName}</h3>
+                    <Badge variant="secondary">{train.Trainclass}</Badge>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Departure</p>
-                    <p>{train.departure}</p>
+                    <p>{train.Depart}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Arrival</p>
-                    <p>{train.arrival}</p>
+                    <p>{train.Arrival}</p>
                   </div>
 
                   <div className="flex flex-col items-end space-y-2">
-                    <p className="text-xl font-bold">₹{train.price}</p>
+                    <p className="text-xl font-bold">₹{train.Cost}</p>
                     <Button
                       onClick={() => {
                         setSelectedTrain(train);
@@ -208,9 +221,7 @@ export default function TrainBookingUnified() {
       <Dialog open={openSeats} onOpenChange={setOpenSeats}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>
-              Select Berths - {selectedTrain?.name}
-            </DialogTitle>
+            <DialogTitle>Select Berths - {selectedTrain?.TrainName}</DialogTitle>
           </DialogHeader>
 
           {/* Coach Layout */}
@@ -235,7 +246,7 @@ export default function TrainBookingUnified() {
           <div className="bg-gray-100 p-4 rounded mb-4">
             <h3 className="font-bold">Fare Summary</h3>
             <p>Seats Selected: {selectedSeats.length}</p>
-            <p>Price per Seat: ₹{selectedTrain?.price}</p>
+            <p>Price per Seat: ₹{selectedTrain?.Cost}</p>
             <p className="font-bold">Total Fare: ₹{totalFare}</p>
           </div>
 
@@ -288,13 +299,21 @@ export default function TrainBookingUnified() {
           <div className="flex justify-end mt-6">
             <Button
               disabled={selectedSeats.length === 0 || passengers.length === 0}
+              onClick={() =>{
+                toast.success("Train has been added", { position: "top-right" });
+                dispatch({
+                  type:"Trainselected",
+                  new: {...selectedTrain,Cost: totalFare}
+                });
+                setOpenSeats(false);
+                }
+              }
             >
               Confirm Booking
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

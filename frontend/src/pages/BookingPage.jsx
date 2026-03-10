@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import HotelsPage from "./HotelsPage";
 import RestaurantPage from "./RestaurantPage";
 import Activities from "./Activities";
 import EssentialsPage from "./Essentials";
+import {BookContext} from "./BookingContext";
+import { BookDispatchContext } from "./BookingContext";
 import {
   User,
   Menu,
@@ -60,19 +62,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export function TabsDemo() {
   return (
     <Tabs defaultValue="booking">
-      <TabsList>
+      <TabsList className="min-w-[1000px]">
         <TabsTrigger value="booking">Booking</TabsTrigger>
         <TabsTrigger value="travel">Travel</TabsTrigger>
         <TabsTrigger value="hotel">Hotels</TabsTrigger>
         <TabsTrigger value="restaurants">Restaurants</TabsTrigger>
         <TabsTrigger value="activities">Activities</TabsTrigger>
         <TabsTrigger value="essentials">Essentials</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
-        <TabsTrigger value="services">Services</TabsTrigger>
+       
       </TabsList>
       <TabsContent value="booking">
         <Card>
@@ -111,43 +108,38 @@ export function TabsDemo() {
 const menuItems = [
   { path: "/book", label: "Booking Details", icon: LayoutDashboard },
   { path: "/estimate", label: "Trip Estimator", icon: Calculator },
-  { path: "/history", label: "Saved Trips", icon: History },
+  { path: "/savedtrips", label: "Saved Trips", icon: History },
   { path: "/settings", label: "Settings", icon: Settings },
 ];
 
 const destinations = [
-  { value: "paris", label: "Paris" },
-  { value: "dubai", label: "Dubai" },
-  { value: "tokyo", label: "Tokyo" },
-  { value: "new-york", label: "New York" },
+  { value: "Paris", label: "Paris" },
+  { value: "Ahmedabad", label: "Ahmedabad" },
+  { value: "Dubai", label: "Dubai" },
+  { value: "Tokyo", label: "Tokyo" },
+  { value: "New-york", label: "New York" },
 ];
 
 export function BookingForm() {
+  const Books = useContext(BookContext);
+  const dispatch = useContext(BookDispatchContext);
   const [open, setOpen] = useState(false);
-  const [destination, setDestination] = useState("");
-  const [dates, setDates] = useState();
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
+  const [opens, setOpens] = useState(false); 
+  const [destination, setDestination] = useState(Books[0].destination);
+  const [dates, setDates] = useState(Books[0].date);
+  const [adults, setAdults] = useState(Books[0].Adults);
+  const [children, setChildren] = useState(Books[0].Children);
   const [rooms, setRooms] = useState(1);
-  const [roomType, setRoomType] = useState("");
-  const [budget, setBudget] = useState([3000]);
-  const [email, setEmail] = useState("");
-  const [name, setname] = useState("");
-  const [phone, setPhone] = useState("");
+  const [budget, setBudget] = useState([Books[0].Budget]);
+  const [email, setEmail] = useState(Books[2].Email);
+  const [name, setname] = useState(Books[2].Name);
+  const [phone, setPhone] = useState(Books[2].Phone);
   const [promo, setPromo] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [notes, setNotes] = useState("");
 
   // Checkbox states
-  const [extras, setExtras] = useState({
-    insurance: false,
-    visa: false,
-    cityTour: false,
-    airportTransfer: false,
-    adventure: false,
-    breakfast: false,
-    flexibleCancellation: false,
-  });
+  const [extras, setExtras] = useState(Books[1]);
 
   const toggleExtra = (key) => {
     setExtras((prev) => ({
@@ -163,7 +155,6 @@ export function BookingForm() {
       adults,
       children,
       rooms,
-      roomType,
       budget: budget[0],
       extras,
       email,
@@ -179,6 +170,7 @@ export function BookingForm() {
   return (
     <Card>
       <CardContent className="space-y-8 pt-6">
+       
         {/* Destination */}
         <div className="space-y-2">
           <Label>Destination</Label>
@@ -202,6 +194,11 @@ export function BookingForm() {
                       value={d.value}
                       onSelect={(value) => {
                         setDestination(value);
+                        dispatch({
+                          type:"Bookschanged",
+                          field: "destination",
+                          new: value
+                        });
                         setOpen(false);
                       }}
                     >
@@ -238,7 +235,13 @@ export function BookingForm() {
               <Calendar
                 mode="range"
                 selected={dates}
-                onSelect={setDates}
+                onSelect={(dates)=>{setDates(dates);
+                dispatch({
+                          type:"Bookschanged",
+                          field: "date",
+                          new: dates
+                        });
+                }}                
                 numberOfMonths={2}
               />
             </PopoverContent>
@@ -246,60 +249,75 @@ export function BookingForm() {
         </div>
 
         {/* Guests & Rooms */}
-        <div className="grid grid-cols-3 gap-4">
-          <Counter label="Adults" value={adults} setValue={setAdults} min={1} />
+        <div className="grid grid-cols-2 gap-4">
+          <Counter label="Adults" value={adults} setValue={(value)=>{setAdults(value);
+                dispatch({
+                          type:"Bookschanged",
+                          field: "Adults",
+                          new: value
+                        });}
+          } min={1} />
           <Counter
             label="Children"
             value={children}
-            setValue={setChildren}
+            setValue={(value)=>{setChildren(value)
+            dispatch({
+                          type:"Bookschanged",
+                          field: "Children",
+                          new: value
+                        });}}
             min={0}
           />
-          <Counter label="Rooms" value={rooms} setValue={setRooms} min={1} />
-        </div>
-
-        {/* Room Type */}
-        <div className="space-y-2">
-          <Label>Room Type</Label>
-          <Select onValueChange={setRoomType}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select room type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="standard">Standard</SelectItem>
-              <SelectItem value="deluxe">Deluxe</SelectItem>
-              <SelectItem value="suite">Suite</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
         {/* Budget */}
         <div className="space-y-2">
-          <Label>Budget (${budget[0]})</Label>
+          <Label>Budget (₹{budget})</Label>
           <Slider
-            defaultValue={[3000]}
-            max={15000}
+            defaultValue={budget}
+            max={5000000}
             step={500}
-            onValueChange={setBudget}
+            onValueChange={(value)=>{setBudget(value);
+            dispatch({
+                          type:"Bookschanged",
+                          field: "Budget",
+                          new: value
+                        });}}
           />
         </div>
+        <Input
+              type="number"
+              min="1"
+              value={budget}
+              onChange={(e) => {setBudget(Number(e.target.value))
+              dispatch({
+                          type:"Bookschanged",
+                          field: "Budget",
+                          new: value
+                        });}}
+              placeholder="Budget"
+            />
 
         {/* Extras Section */}
         <div className="space-y-4">
           <Label className="text-base font-semibold">Add-ons & Services</Label>
 
           {[
-            { key: "insurance", label: "Travel Insurance" },
-            { key: "visa", label: "Visa Assistance" },
-            { key: "cityTour", label: "Guided City Tour" },
-            { key: "airportTransfer", label: "Airport Pickup & Drop" },
-            { key: "adventure", label: "Adventure Activities" },
-            { key: "breakfast", label: "Breakfast Included" },
-            { key: "flexibleCancellation", label: "Flexible Cancellation" },
+            { key: "Travel Insurance", label: "Travel Insurance" },
+            { key: "Visa Assistance", label: "Visa Assistance" },
+            { key: "Guided City Tour", label: "Guided City Tour" },
+            { key: "Airport Pickup & Drop", label: "Airport Pickup & Drop" },
+            { key: "Flexible Cancellation", label: "Flexible Cancellation" },
           ].map((item) => (
             <div key={item.key} className="flex items-center space-x-2">
               <Checkbox
                 checked={extras[item.key]}
-                onCheckedChange={() => toggleExtra(item.key)}
+                onCheckedChange={(value) => {toggleExtra(item.key)
+                dispatch({
+                          type:"Books1changed",
+                          field: item.key,
+                          new: value
+                        });}}
               />
               <Label>{item.label}</Label>
             </div>
@@ -313,7 +331,12 @@ export function BookingForm() {
             <Input
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {setEmail(e.target.value)
+              dispatch({
+                          type:"Books2changed",
+                          field: "Email",
+                          new: e.target.value
+                        });}}
             />
           </div>
 
@@ -322,7 +345,12 @@ export function BookingForm() {
             <Input
               placeholder="Enter phone number"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) =>{ setPhone(e.target.value);
+              dispatch({
+                          type:"Books2changed",
+                          field: "Phone",
+                          new: e.target.value
+                        });}}
             />
           </div>
         </div>
@@ -332,12 +360,17 @@ export function BookingForm() {
           <Input
             placeholder="Enter your name"
             value={name}
-            onChange={(e) => setname(e.target.value)}
+            onChange={(e) => {setname(e.target.value)
+            dispatch({
+                          type:"Books2changed",
+                          field: "Name",
+                          new: e.target.value
+                        });}}
           />
         </div>
 
         {/* Payment */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label>Payment Method</Label>
           <Select onValueChange={setPaymentMethod}>
             <SelectTrigger>
@@ -350,7 +383,7 @@ export function BookingForm() {
               <SelectItem value="netbanking">Net Banking</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
 
         {/* Promo Code */}
         <div className="space-y-2">
@@ -371,16 +404,12 @@ export function BookingForm() {
             onChange={(e) => setNotes(e.target.value)}
           />
         </div>
-
-        <Button className="w-full" onClick={handleSubmit}>
-          Submit
-        </Button>
       </CardContent>
     </Card>
   );
 }
 
-function Counter({ label, value, setValue, min }) {
+export function Counter({ label, value, setValue, min }) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>

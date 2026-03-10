@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
+import { BookDispatchContext } from "./BookingContext";
+import { toast } from "sonner";
 const activitiesData = [
   {
     id: 1,
     name: "Sabarmati Riverfront Walk",
     category: "Nature",
-    description: "Enjoy a peaceful walk along the Sabarmati River with scenic sunset views.",
+    description:
+      "Enjoy a peaceful walk along the Sabarmati River with scenic sunset views.",
     duration: "2 hrs",
     price: 100,
-    image: "./src/assets/Sabarmati.jpg"
+    image: "./src/assets/Sabarmati.jpg",
   },
   {
     id: 2,
@@ -21,7 +23,7 @@ const activitiesData = [
     description: "Historic stepwell with beautiful Indo-Islamic architecture.",
     duration: "1.5 hrs",
     price: 150,
-    image: "./src/assets/Adalaj.jpg"
+    image: "./src/assets/Adalaj.jpg",
   },
   {
     id: 3,
@@ -30,7 +32,7 @@ const activitiesData = [
     description: "Taste Ahmedabad’s famous street food at night markets.",
     duration: "3 hrs",
     price: 500,
-    image: "./src/assets/manekchowk.jpg"
+    image: "./src/assets/manekchowk.jpg",
   },
   {
     id: 4,
@@ -39,28 +41,52 @@ const activitiesData = [
     description: "Explore science exhibits, IMAX theatre and robotics park.",
     duration: "3 hrs",
     price: 400,
-    image: "./src/assets/science_city.jpg"
-  }
+    image: "./src/assets/science_city.jpg",
+  },
+  {
+    id: 5,
+    name: "Alpha Mall",
+    category: "Shopping",
+    description:
+      "Alpha one mall is famous for being the largest mall in Ahmedabad",
+    duration: "3 hrs",
+    price: 200,
+    image: "./src/assets/ahmedabadonemall.jpg",
+  },
 ];
 
-const categories = ["All", "Nature", "Heritage", "Food", "Adventure", "Shopping"];
+const categories = [
+  "All",
+  "Nature",
+  "Heritage",
+  "Food",
+  "Adventure",
+  "Shopping",
+];
 
 export default function Activities() {
+  const dispatch = useContext(BookDispatchContext);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [people, setPeople] = useState(1);
   const [date, setDate] = useState("");
 
+  const fieldvalue = {
+    "Sabarmati Riverfront Walk": 0,
+    "Adalaj Stepwell": 1,
+    "Manek Chowk Night Food Tour": 2,
+    "Science City": 3,
+    "Alpha Mall": 4,
+  };
   const filteredActivities =
     selectedCategory === "All"
       ? activitiesData
-      : activitiesData.filter(a => a.category === selectedCategory);
+      : activitiesData.filter((a) => a.category === selectedCategory);
 
   const totalCost = people * (selectedActivity?.price || 0);
 
   return (
     <div className="min-h-screen max-w-4xl bg-gray-50">
-
       {/* Hero Section */}
       <div className="relative h-[300px]">
         <img
@@ -68,23 +94,23 @@ export default function Activities() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
-          <h1 className="text-4xl font-bold">
-            Explore :Ahmedabad
-          </h1>
+          <h1 className="text-4xl font-bold">Explore: Ahmedabad</h1>
           <p className="mt-2 text-lg">Attractions, activities & experiences</p>
         </div>
       </div>
 
       {/* Category Chips */}
       <div className="flex gap-3 overflow-x-auto p-4 bg-white shadow sticky top-0 z-10">
-        {categories.map(cat => (
+        {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
             className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap
-              ${selectedCategory === cat
-                ? "bg-black text-white"
-                : "bg-white hover:bg-gray-100"}`}
+              ${
+                selectedCategory === cat
+                  ? "bg-black text-white"
+                  : "bg-white hover:bg-gray-100"
+              }`}
           >
             {cat}
           </button>
@@ -93,10 +119,9 @@ export default function Activities() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-6 grid md:grid-cols-3 gap-6">
-
         {/* Activity Timeline */}
         <div className="md:col-span-2 space-y-6">
-          {filteredActivities.map(activity => (
+          {filteredActivities.map((activity) => (
             <Card
               key={activity.id}
               className="flex flex-col md:flex-row overflow-hidden shadow hover:shadow-lg transition"
@@ -157,7 +182,26 @@ export default function Activities() {
                 <p className="font-bold">Total: ₹{totalCost}</p>
               </div>
 
-              <Button className="w-full">Add to Trip Plan</Button>
+              <Button
+                onClick={() => {
+                  toast.success(`${selectedActivity.name} has been added`, {
+                    position: "top-right",
+                  });
+                  dispatch({
+                    type: "Activitiesadded",
+                    field: fieldvalue[selectedActivity.name],
+                    new: {
+                      type:selectedActivity.name,
+                      date: date,
+                      people: people,
+                      Cost: totalCost,
+                    },
+                  });
+                }}
+                className="w-full"
+              >
+                Add to Trip Plan
+              </Button>
             </>
           ) : (
             <p className="text-gray-500">
@@ -166,7 +210,6 @@ export default function Activities() {
           )}
         </div>
       </div>
-
     </div>
   );
 }

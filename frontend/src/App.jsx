@@ -1,39 +1,51 @@
-import { useState } from 'react';
-import './App.css';
+import { useState } from "react";
+import { useEffect } from "react";
+import "./App.css";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import LandingPage from "./pages/LandingPage";
-import BookingPage from './pages/BookingPage';
+import BookingPage from "./pages/BookingPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Eye, EyeOff, X } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/sonner";
+import TripPlannerDashboard from "./pages/Estimator";
+import { BookProvider } from "./pages/BookingContext";
+import SavedTripsDashboard from "./pages/SavedTrips"
 
-
-export function Login({togglelogin,togglesignup}) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
+export function Login({ togglelogin, togglesignup }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const formData = { email, password }
-    console.log("Login Data:", formData)
+    const formData = { email, password };
+    console.log("Login Data:", formData);
 
     // Connect to backend here
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-muted z-15">
       <Card className="w-full max-w-md">
         <CardHeader>
-        <Button className="relative"
-              variant="ghost"
-              size="icon"
-              onClick={togglelogin
-              }
-            ><X /></Button>
+          <Button
+            className="relative"
+            variant="ghost"
+            size="icon"
+            onClick={togglelogin}
+          >
+            <X />
+          </Button>
           <CardTitle>Login</CardTitle>
           <CardDescription>
             Enter your credentials to access your account
@@ -42,7 +54,6 @@ export function Login({togglelogin,togglesignup}) {
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <div className="space-y-2">
               <Label>Email</Label>
               <Input
@@ -69,73 +80,73 @@ export function Login({togglelogin,togglesignup}) {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </div>
-              <Button className="relative"
-              variant="outline"
-              onClick={togglesignup
-              }
-            >Sign Up</Button>
+              <Button
+                className="relative"
+                variant="outline"
+                onClick={togglesignup}
+              >
+                Sign Up
+              </Button>
             </div>
 
             <Button className="w-full" type="submit">
               Login
             </Button>
-
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
-export function Signup({togglesignup}) {
+export function Signup({ togglesignup }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
+  });
 
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match")
-      return
+      alert("Passwords do not match");
+      return;
     }
 
-    console.log("Signup Data:", form)
+    console.log("Signup Data:", form);
 
     // Connect to backend here
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-muted">
       <Card className="w-full max-w-md">
-      <Button className="relative"
-              variant="ghost"
-              size="icon"
-              onClick={togglesignup
-              }
-            ><X /></Button>
+        <Button
+          className="relative"
+          variant="ghost"
+          size="icon"
+          onClick={togglesignup}
+        >
+          <X />
+        </Button>
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
-          <CardDescription>
-            Fill in your details to register
-          </CardDescription>
+          <CardDescription>Fill in your details to register</CardDescription>
         </CardHeader>
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <div className="space-y-2">
               <Label>Full Name</Label>
               <Input
@@ -192,26 +203,39 @@ export function Signup({togglesignup}) {
             <Button className="w-full" type="submit">
               Sign Up
             </Button>
-
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/book" element={<BookingPage />} />
+  // const [data, setdata] = useState("");
 
-      </Routes>
-    </BrowserRouter>
+  // useEffect(() => {
+  //   fetch("http://localhost:3000/hi")
+  //     .then((res) => res.json())
+  //     .then((data) => setdata(data.message))
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // }, []);
+
+  return (
+    <>
+      {/* <h1>{data || "bhat"}</h1> */}
+      <BookProvider>
+        <Toaster />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/book" element={<BookingPage />} />
+            <Route path="/estimate" element={<TripPlannerDashboard />} />
+            <Route path="/savedtrips" element={<SavedTripsDashboard />} />
+          </Routes>
+        </BrowserRouter>
+      </BookProvider>
+    </>
   );
 }
 
 export default App;
-
-
