@@ -7,7 +7,8 @@ import { MapPin, Calendar, Users, Trash2, Eye } from "lucide-react";
 import { Sidebar } from "./BookingPage";
 
 export default function SavedTripsDashboard() {
-  const savedtrips = localStorage.getItem('savedlocaltrips');
+
+  const savedtrips = (localStorage.getItem('savedlocaltrips') || 0);
   const localtrips = JSON.parse(savedtrips);
   const [search, setSearch] = useState("");
   const [trips, setTrips] = useState(localtrips);
@@ -19,7 +20,7 @@ export default function SavedTripsDashboard() {
   const filteredTrips = trips.filter((trip) =>
     trip.destination.toLowerCase().includes(search.toLowerCase()),
   );
-
+if(savedtrips)
   return (
     <>
       <Sidebar />
@@ -101,4 +102,8 @@ export default function SavedTripsDashboard() {
       </div>
     </>
   );
+
+  return(<>
+          <Sidebar />
+  </>);
 }

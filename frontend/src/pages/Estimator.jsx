@@ -390,10 +390,11 @@ export default function TripPlannerDashboard() {
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => {
-                          const oldtrips =
-                            localStorage.getItem("savedlocaltrips");
-                          const trips = JSON.parse(oldtrips);
-                          let newid = oldtrips.length;
+                          // const oldtrips =
+                          //   localStorage.getItem("savedlocaltrips");
+                          const trips = [];
+                          // JSON.parse(oldtrips);
+                          let newid = trips.length;
                           trips.push({
                             activities: activitis,
                             budget: Books[0].Budget,
