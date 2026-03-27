@@ -14,7 +14,7 @@ const activitiesData = [
       "Enjoy a peaceful walk along the Sabarmati River with scenic sunset views.",
     duration: "2 hrs",
     price: 100,
-    image: "./src/assets/Sabarmati.jpg",
+    image: "/images/Sabarmati.jpg",
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const activitiesData = [
     description: "Historic stepwell with beautiful Indo-Islamic architecture.",
     duration: "1.5 hrs",
     price: 150,
-    image: "./src/assets/Adalaj.jpg",
+    image: "/images/Adalaj.jpg",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ const activitiesData = [
     description: "Taste Ahmedabad’s famous street food at night markets.",
     duration: "3 hrs",
     price: 500,
-    image: "./src/assets/manekchowk.jpg",
+    image: "/images/manekchowk.jpg",
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ const activitiesData = [
     description: "Explore science exhibits, IMAX theatre and robotics park.",
     duration: "3 hrs",
     price: 400,
-    image: "./src/assets/science_city.jpg",
+    image: "/images/science_city.jpg",
   },
   {
     id: 5,
@@ -51,7 +51,7 @@ const activitiesData = [
       "Alpha one mall is famous for being the largest mall in Ahmedabad",
     duration: "3 hrs",
     price: 200,
-    image: "./src/assets/ahmedabadonemall.jpg",
+    image: "/images/ahmedabadonemall.jpg",
   },
 ];
 
@@ -90,7 +90,7 @@ export default function Activities() {
       {/* Hero Section */}
       <div className="relative h-[300px]">
         <img
-          src="./src/assets/ahmedabad.jpg"
+          src="/images/Ahmedabad.jpg"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">

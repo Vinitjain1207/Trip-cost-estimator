@@ -91,7 +91,7 @@ export default function HotelsPage() {
       guest: guests,
       room: rooms, 
       roomtype: roomType,
-      image: "./src/assets/paris hotel.jpg",
+      image: "/images/paris hotel.jpg",
       amenities: ["Pool", "Spa", "Gym"],
     },
     {
@@ -104,7 +104,7 @@ export default function HotelsPage() {
       guest: guests,
       room: rooms, 
       roomtype: roomType,
-      image: "./src/assets/london hotel.jpg",
+      image: "/images/london hotel.jpg",
       amenities: ["WiFi", "Breakfast", "Gym"],
     },
     {
@@ -117,7 +117,7 @@ export default function HotelsPage() {
       guest: guests,
       room: rooms,
       roomtype: roomType,
-      image: "./src/assets/duabai resort.jpg",
+      image: "/images/duabai resort.jpg",
       amenities: ["Pool", "Spa", "Beach"],
     },
   ];

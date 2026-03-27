@@ -42,11 +42,11 @@ export default function Restaurantpage() {
       Table: selectedTable,
       Time: selectedTime,
       Cost: 500,
-      image: "./src/assets/restaurant1.jpg",
+      image: "/images/restaurant1.jpg",
       menuImages: [
-        "./src/assets/menu1.jpg",
-        "./src/assets/menu2.jpg",
-        "./src/assets/menu3.jpg",
+        "/images/menu1.jpg",
+        "/images/menu2.jpg",
+        "/images/menu3.jpg",
       ],
     },
     {
@@ -58,11 +58,11 @@ export default function Restaurantpage() {
       Table: selectedTable,
       Time: selectedTime,
       Cost: 800,
-      image: "./src/assets/restaurant2.jpg",
+      image: "/images/restaurant2.jpg",
       menuImages: [
-        "./src/assets/menu4.jpg",
-        "./src/assets/menu5.jpg",
-        "./src/assets/menu6.jpg",
+        "/images/menu4.jpg",
+        "/images/menu5.jpg",
+        "/images/menu6.jpg",
       ],
     },
     {
@@ -75,11 +75,11 @@ export default function Restaurantpage() {
       Table: selectedTable,
       Time: selectedTime,
       Cost: 600,
-      image: "./src/assets/restaurant3.jpg",
+      image: "/images/restaurant3.jpg",
       menuImages: [
-        "./src/assets/menu7.jpg",
-        "./src/assets/menu8.jpg",
-        "./src/assets/menu9.jpg",
+        "/images/menu7.jpg",
+        "/images/menu8.jpg",
+        "/images/menu9.jpg",
       ],
     },
   ];
