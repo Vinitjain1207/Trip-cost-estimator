@@ -109,7 +109,6 @@ const menuItems = [
   { path: "/book", label: "Booking Details", icon: LayoutDashboard },
   { path: "/estimate", label: "Trip Estimator", icon: Calculator },
   { path: "/savedtrips", label: "Saved Trips", icon: History },
-  { path: "/settings", label: "Settings", icon: Settings },
 ];
 
 const destinations = [

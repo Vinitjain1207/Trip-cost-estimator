@@ -9,6 +9,7 @@ export function BookProvider({ children }) {
 
   return (
     <BookContext value={Books}>
+    {      console.log(Books)}
       <BookDispatchContext value={dispatch}>{children}</BookDispatchContext>
     </BookContext>
   );
@@ -88,6 +89,10 @@ function BookReducer(draft, action) {
       draft[action.field] = action.new;
       break;
     } 
+    case "reset": {
+      draft.splice(0,draft.length,...action.new);
+      break;
+    } 
 
     default: {
         throw Error('Unknown action: ' + action.type);
@@ -119,28 +124,28 @@ function BookReducer(draft, action) {
   //   }
 }
 
-const initialBooks = [
+export const initialBooks = [
   {
     destination: "Ahmedabad",
     date: {
-      from: "2026-03-04T18:30:00.000Z",
-      to: "2026-03-07T18:30:00.000Z",
+      from: "",
+      to: "",
     },
     Adults: 1,
     Children: 1,
-    Budget: 6000,
+    Budget: 0,
   },
   {
-    "Travel Insurance": true,
-    "Visa Assistance": true,
-    "Guided City Tour": true,
-    "Airport Pickup & Drop": true,
-    "Flexible Cancellation": true,
+    "Travel Insurance": false,
+    "Visa Assistance": false,
+    "Guided City Tour": false,
+    "Airport Pickup & Drop": false,
+    "Flexible Cancellation": false,
   },
   {
-    Email: "vv@gmail.com",
-    Phone: "123",
-    Name: "vvv",
+    Email: "",
+    Phone: "",
+    Name: "",
   },
   {
     FlightType: "",

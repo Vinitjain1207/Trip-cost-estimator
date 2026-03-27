@@ -1,11 +1,13 @@
 import { useContext, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookContext } from "./BookingContext";
+import { BookDispatchContext } from "./BookingContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Sidebar } from "./BookingPage";
 import { Trash2 } from "lucide-react";
+import { initialBooks } from "./BookingContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +24,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function TripPlannerDashboard() {
   const Books = useContext(BookContext);
+  const dispatch = useContext(BookDispatchContext);
   const [people, setPeople] = useState(1);
   let helpinfo = "";
   for (const [key, value] of Object.entries(Books[1])) {
@@ -390,14 +393,13 @@ export default function TripPlannerDashboard() {
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => {
-                          // const oldtrips =
-                          //   localStorage.getItem("savedlocaltrips");
-                          const trips = [];
-                          // JSON.parse(oldtrips);
+                          const oldtrips =
+                            localStorage.getItem("savedlocaltrips");
+                          const trips = oldtrips ? JSON.parse(oldtrips):[];;
                           let newid = trips.length;
                           trips.push({
                             activities: activitis,
-                            budget: Books[0].Budget,
+                            budget: totalCost,
                             destination: Books[0].destination,
                             endDate: Books[3].Return,
                             hotel: Books[9].name,
@@ -407,6 +409,10 @@ export default function TripPlannerDashboard() {
                             travelers: Books[3].Quantity,
                           });
                           localStorage.setItem('savedlocaltrips',JSON.stringify(trips));
+                          dispatch({
+                            type: "reset",
+                            new: initialBooks
+                          });                      
                         }}
                       >
                         Continue
